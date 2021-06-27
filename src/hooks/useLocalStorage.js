@@ -13,6 +13,7 @@ function useLocalStorage(key, initialValue) {
     try {
       const valueToStore =
         value instanceof Function ? value(storedValue) : value;
+        console.log(valueToStore,"to sote")
       setStoredValue(valueToStore);
       window.localStorage.setItem(key, JSON.stringify(valueToStore));
     } catch (error) {

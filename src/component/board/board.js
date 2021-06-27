@@ -8,43 +8,51 @@ const defaultGameSetup = [
   [1, 1, 0],
 ];
 export default function App() {
-  const [grid, setGrid] = React.useState([
-    [1, 0, 0],
-    [1, 1, 0],
-    [1, 1, 0],
-  ]);
+    
+//   const [grid, setGrid] = React.useState([
+//     [1, 0, 0],
+//     [1, 1, 0],
+//     [1, 1, 0],
+//   ]);
 
-    const [activeCell, setActiveCell] = useLocalStorage("active",{
+  const [grid,setGrid]=useLocalStorage("grid",[
+  [1, 0, 0],
+  [1, 1, 0],
+  [1, 1, 0],
+])
+  const [isUserWon,setIsUserWon]=React.useState(false);
+
+ const [activeCell, setActiveCell] = useLocalStorage("active",{
         rowIndex:0,
         colIndex:0
     })
 
-  const checkIfAllAreSame = (squareValue) => {
+  const isGameCompleted = (squareValue) => {
     return squareValue === grid[0][0];
   };
 
   React.useEffect(() => {
     const resultedArray = grid.flat(1);
-    if (resultedArray.every(checkIfAllAreSame)) {
-      alert("You won");
+    if (resultedArray.every(isGameCompleted)) {
+     setIsUserWon(true);
     }
   }, [grid]);
 
-  const updateGridValue = (rowIndex, colIndex) => {
+  const updateCellValue = (rowIndex, colIndex) => {
     console.log("coming here to update");
     let sliceGridData = grid.slice();
     sliceGridData[rowIndex][colIndex] = ++sliceGridData[rowIndex][colIndex];
     setGrid(sliceGridData);
   };
 
-  const updateTheGrid = (direction) => {
+  const updateActiveCellPosition = (direction) => {
     if (direction === "right") {
       if (activeCell.colIndex !== 2) {
         setActiveCell({
           ...activeCell,
           colIndex: activeCell.colIndex + 1,
         });
-        updateGridValue(activeCell.rowIndex, activeCell.colIndex + 1);
+        updateCellValue(activeCell.rowIndex, activeCell.colIndex + 1);
       }
     }
     if (direction === "down") {
@@ -53,7 +61,7 @@ export default function App() {
           ...activeCell,
           rowIndex: activeCell.rowIndex + 1,
         });
-        updateGridValue(activeCell.rowIndex + 1, activeCell.colIndex);
+        updateCellValue(activeCell.rowIndex + 1, activeCell.colIndex);
       }
     }
     if (direction === "left") {
@@ -62,7 +70,7 @@ export default function App() {
           ...activeCell,
           colIndex: activeCell.colIndex - 1,
         });
-        updateGridValue(activeCell.rowIndex, activeCell.colIndex - 1);
+        updateCellValue(activeCell.rowIndex, activeCell.colIndex - 1);
       }
     }
     if (direction === "up") {
@@ -71,7 +79,7 @@ export default function App() {
           ...activeCell,
           rowIndex: activeCell.rowIndex - 1,
         });
-        updateGridValue(activeCell.rowIndex - 1, activeCell.colIndex);
+        updateCellValue(activeCell.rowIndex - 1, activeCell.colIndex);
       }
     }
   };
@@ -95,7 +103,7 @@ export default function App() {
         default:
           currentDirection = "none";
       }
-      updateTheGrid(currentDirection);
+      updateActiveCellPosition(currentDirection);
     },
     [activeCell]
   );
@@ -108,8 +116,11 @@ export default function App() {
     };
   }, [handleKeyDown]);
 
+
   const resetBoardHandler = () => {
-    setGrid(defaultGameSetup);
+    setGrid([[1, 0, 0],
+        [1, 1, 0],
+        [1, 1, 0]]);
     setActiveCell({
       ...activeCell,
       rowIndex: 0,
@@ -117,18 +128,15 @@ export default function App() {
     });
   };
 
-  const increaseHandler = () => {
-    setActiveCell({
-      ...activeCell,
-      rowIndex: activeCell.rowIndex + 1,
-      colIndex: activeCell.colIndex + 1,
-    });
-  };
+const restartGameHandler=()=>{
+    resetBoardHandler();
+    setIsUserWon(false)
+}
 
   return (
     <div className="parentContainer">
       <div className="boardContainerWrapper">
-        <div className="boardColumnWrapper">
+      { !isUserWon && <div className="boardColumnWrapper">
           {grid.map((row, rowIndex) => (
             <div className="boardRowWrapper" key={rowIndex}>
               {row.map((col, colIndex) => (
@@ -146,10 +154,13 @@ export default function App() {
               ))}
             </div>
           ))}
-        </div>
+        </div>}
+        {isUserWon && <div className="gameCompleteWrapper">🎉 🎊
+
+        You Won ! </div>}
         <div className="boardButton">
-          <button className="resetBoardButton" onClick={resetBoardHandler}>
-            RESET
+          <button className="resetBoardButton" onClick={isUserWon?restartGameHandler:resetBoardHandler}>
+           {isUserWon?"RESTART":"RESET"} 
           </button>
         
         </div>

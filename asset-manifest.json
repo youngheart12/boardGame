@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/boardGame/static/css/main.679ebfc0.chunk.css",
+    "main.js": "/boardGame/static/js/main.9d3b41dc.chunk.js",
+    "main.js.map": "/boardGame/static/js/main.9d3b41dc.chunk.js.map",
+    "runtime-main.js": "/boardGame/static/js/runtime-main.265c8c76.js",
+    "runtime-main.js.map": "/boardGame/static/js/runtime-main.265c8c76.js.map",
+    "static/js/2.35e1c01e.chunk.js": "/boardGame/static/js/2.35e1c01e.chunk.js",
+    "static/js/2.35e1c01e.chunk.js.map": "/boardGame/static/js/2.35e1c01e.chunk.js.map",
+    "static/js/3.9f68aa00.chunk.js": "/boardGame/static/js/3.9f68aa00.chunk.js",
+    "static/js/3.9f68aa00.chunk.js.map": "/boardGame/static/js/3.9f68aa00.chunk.js.map",
+    "index.html": "/boardGame/index.html",
+    "static/css/main.679ebfc0.chunk.css.map": "/boardGame/static/css/main.679ebfc0.chunk.css.map",
+    "static/js/2.35e1c01e.chunk.js.LICENSE.txt": "/boardGame/static/js/2.35e1c01e.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.265c8c76.js",
+    "static/js/2.35e1c01e.chunk.js",
+    "static/css/main.679ebfc0.chunk.css",
+    "static/js/main.9d3b41dc.chunk.js"
+  ]
+}

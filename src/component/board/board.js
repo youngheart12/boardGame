@@ -1,145 +1,142 @@
-
 import React from "react";
-import useLocalStorage from '../../hooks/useLocalStorage';
-import './board.css';
+import useLocalStorage from "../../hooks/useLocalStorage";
+import "./board.css";
 
-const defaultGameSetup=[
-    [1, 0, 0],
-    [1, 1, 0],
-    [1, 1, 0]
-  ]
+const defaultGameSetup = [
+  [1, 0, 0],
+  [1, 1, 0],
+  [1, 1, 0],
+];
 export default function App() {
-  
   const [grid, setGrid] = React.useState([
     [1, 0, 0],
     [1, 1, 0],
-    [1, 1, 0]
+    [1, 1, 0],
   ]);
 
-  const [activeSquare, setActiveCell] = React.useState({
-      rowIndex:0,
-      colIndex:0
-  })
-  
-//   const checkIfAllAreSame = (squareValue) => {
-//     return squareValue === grid[0][0];
-//   };
+    const [activeCell, setActiveCell] = useLocalStorage("active",{
+        rowIndex:0,
+        colIndex:0
+    })
 
-//   React.useEffect(() => {
-//     const resultedArray = grid.flat(1);
-//     console.log(resultedArray.every(checkIfAllAreSame));
-//   }, [grid]);
- 
+  const checkIfAllAreSame = (squareValue) => {
+    return squareValue === grid[0][0];
+  };
+
+  React.useEffect(() => {
+    const resultedArray = grid.flat(1);
+    if (resultedArray.every(checkIfAllAreSame)) {
+      alert("You won");
+    }
+  }, [grid]);
+
   const updateGridValue = (rowIndex, colIndex) => {
-      console.log("coming here to update")
+    console.log("coming here to update");
     let sliceGridData = grid.slice();
     sliceGridData[rowIndex][colIndex] = ++sliceGridData[rowIndex][colIndex];
     setGrid(sliceGridData);
   };
 
   const updateTheGrid = (direction) => {
- setActiveCell({rowIndex:0,colIndex:0})
     if (direction === "right") {
-      console.log(activeSquare, "check");
-      if (activeSquare.colIndex < 2) {
+      if (activeCell.colIndex !== 2) {
         setActiveCell({
-          ...activeSquare,
-          colIndex: ++activeSquare.colIndex
+          ...activeCell,
+          colIndex: activeCell.colIndex + 1,
         });
-
-        updateGridValue(activeSquare.rowIndex, activeSquare.colIndex);
+        updateGridValue(activeCell.rowIndex, activeCell.colIndex + 1);
       }
     }
     if (direction === "down") {
-      if (activeSquare.rowIndex < 2) {
+      if (activeCell.rowIndex !== 2) {
         setActiveCell({
-          ...activeSquare,
-          rowIndex: ++activeSquare.rowIndex
+          ...activeCell,
+          rowIndex: activeCell.rowIndex + 1,
         });
-        updateGridValue(activeSquare.rowIndex, activeSquare.colIndex);
+        updateGridValue(activeCell.rowIndex + 1, activeCell.colIndex);
       }
     }
     if (direction === "left") {
-      if (activeSquare.colIndex > 0) {
-        
+      if (activeCell.colIndex !== 0) {
         setActiveCell({
-          ...activeSquare,
-          colIndex: --activeSquare.colIndex
+          ...activeCell,
+          colIndex: activeCell.colIndex - 1,
         });
-        updateGridValue(activeSquare.rowIndex, activeSquare.colIndex);
+        updateGridValue(activeCell.rowIndex, activeCell.colIndex - 1);
       }
     }
     if (direction === "up") {
-      if (activeSquare.rowIndex >= 0 && activeSquare.colIndex >= 0) {
+      if (activeCell.rowIndex !== 0) {
         setActiveCell({
-          ...activeSquare,
-          rowIndex: --activeSquare.rowIndex
+          ...activeCell,
+          rowIndex: activeCell.rowIndex - 1,
         });
-        updateGridValue(activeSquare.rowIndex, activeSquare.colIndex);
+        updateGridValue(activeCell.rowIndex - 1, activeCell.colIndex);
       }
     }
   };
 
-  const handleKeyDown = (e) => {
-    e.preventDefault();
-    let currentDirection;
-    switch (e.keyCode) {
-      case 37:
-        currentDirection = "left";
-        break;
-      case 38:
-        currentDirection = "up";
-        break;
-      case 39:
-        currentDirection = "right";
-        break;
-      case 40:
-        currentDirection = "down";
-        break;
-      default:
-        currentDirection = "none";
-    }
-    updateTheGrid(currentDirection);
-  };
+  const handleKeyDown = React.useCallback(
+    (e) => {
+      let currentDirection;
+      switch (e.keyCode) {
+        case 37:
+          currentDirection = "left";
+          break;
+        case 38:
+          currentDirection = "up";
+          break;
+        case 39:
+          currentDirection = "right";
+          break;
+        case 40:
+          currentDirection = "down";
+          break;
+        default:
+          currentDirection = "none";
+      }
+      updateTheGrid(currentDirection);
+    },
+    [activeCell]
+  );
 
   React.useEffect(() => {
     document.body.addEventListener("keydown", handleKeyDown);
 
-     return ()=>{
-        document.body.removeEventListener("keydown",handleKeyDown)
-    }
-  }, []);
+    return () => {
+      document.body.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [handleKeyDown]);
 
- 
-
-const resetBoardHandler=()=>{
-
-   setGrid([
-    [1, 1, 1],
-    [1, 1, 0],
-    [1, 1, 0]
-  ])
-  console.log([...defaultGameSetup])
+  const resetBoardHandler = () => {
+    setGrid(defaultGameSetup);
     setActiveCell({
-        rowIndex:0,
-        colIndex:0
-    })
+      ...activeCell,
+      rowIndex: 0,
+      colIndex: 0,
+    });
+  };
 
-  
-}
-console.log(activeSquare,"natural")
+  const increaseHandler = () => {
+    setActiveCell({
+      ...activeCell,
+      rowIndex: activeCell.rowIndex + 1,
+      colIndex: activeCell.colIndex + 1,
+    });
+  };
+
   return (
     <div className="parentContainer">
       <div className="boardContainerWrapper">
-        <div className="boardColumnWrapper" >
+        <div className="boardColumnWrapper">
           {grid.map((row, rowIndex) => (
             <div className="boardRowWrapper" key={rowIndex}>
               {row.map((col, colIndex) => (
                 <div
-                key={colIndex+Math.random(0,10)}
+                  key={colIndex + Math.random(0, 10)}
                   className={
-                    rowIndex === activeSquare.rowIndex &&
-                    colIndex === activeSquare.colIndex
+                    rowIndex === activeCell.rowIndex &&
+                    colIndex === activeCell.colIndex
                       ? "boardActiveCell"
                       : "boardCell"
                   }
@@ -151,7 +148,10 @@ console.log(activeSquare,"natural")
           ))}
         </div>
         <div className="boardButton">
-          <button className="resetBoardButton" onClick={resetBoardHandler}>RESET</button>
+          <button className="resetBoardButton" onClick={resetBoardHandler}>
+            RESET
+          </button>
+        
         </div>
       </div>
     </div>

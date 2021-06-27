@@ -8,11 +8,19 @@
     font-family: sans-serif;
     text-align: center;
   }
+  .topNavBar{
+      background-color: #123454;
+      color: white;
+      padding: 12px 16px;
+     display: flex;
+     justify-content: space-around;
+      
+  }
   .parentContainer {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+  height: 90vh;
   }
   .grid {
     width: 300px;

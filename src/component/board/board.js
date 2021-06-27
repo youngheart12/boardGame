@@ -134,7 +134,19 @@ const restartGameHandler=()=>{
 }
 
   return (
+      <div>
+          <nav className="topNavBar">
+              <div>
+              Press Any Key On Board To Start Playing  
+              </div>
+             
+              <div>
+              Use Arrow Keys To Play 
+              </div>
+          </nav>
+      
     <div className="parentContainer">
+    
       <div className="boardContainerWrapper">
       { !isUserWon && <div className="boardColumnWrapper">
           {grid.map((row, rowIndex) => (
@@ -165,6 +177,7 @@ const restartGameHandler=()=>{
         
         </div>
       </div>
+    </div>
     </div>
   );
 }
